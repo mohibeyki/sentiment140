@@ -55,20 +55,21 @@ def create_lexicon(fin):
             i = 0
             for line in f:
                 i += 1
+                tweet = line.split(':::', 1)[1]
+                words = word_tokenize(tweet.lower())
+                for w in words:
+                    words_list.append(lemmatizer.lemmatize(w))
+
                 if i % 1000 == 0:
-                    tweet = line.split(':::', 1)[1]
-                    words = word_tokenize(tweet.lower())
-                    for w in words:
-                        words_list.append(lemmatizer.lemmatize(w))
                     bar.update(i)
 
         except Exception as e:
             traceback.print_stack()
             print(str(e))
 
-    w_counts = Counter(words_list)
-    for w in w_counts:
-        lexicon.append(w)
+    word_counts = Counter(words_list).most_common()
+    for w in word_counts:
+        lexicon.append(w[0])
 
     print(len(lexicon))
 

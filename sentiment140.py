@@ -6,7 +6,7 @@ from nltk.tokenize import word_tokenize
 lemmatizer = WordNetLemmatizer()
 
 
-def generator(source='sample_set.csv', batch_size=128):
+def generator(feature_count, source='sample_set.csv', batch_size=128):
     with open('lexicon-dict.pickle', 'rb') as f:
         lexicon = pickle.load(f)
     while True:
@@ -36,7 +36,7 @@ def generator(source='sample_set.csv', batch_size=128):
                     )
 
 
-def parse_data(input_file='test_set.csv'):
+def parse_data(feature_count, input_file='test_set.csv'):
     with open('lexicon-dict.pickle', 'rb') as f:
         lexicon = pickle.load(f)
 
@@ -47,16 +47,13 @@ def parse_data(input_file='test_set.csv'):
         for line in f:
             label, tweet = line.split(':::', 1)
 
-            current_words = word_tokenize(tweet.lower())
-            current_words = [lemmatizer.lemmatize(i) for i in current_words]
+            words = word_tokenize(tweet.lower())
+            features = []
+            for i in words:
+                index = lexicon.get(lemmatizer.lemmatize(i), 0)
+                features.append(index if index < feature_count else 0)
 
-            features = np.zeros(len(lexicon))
-
-            for word in current_words:
-                if word in lexicon:
-                    features[lexicon[word]] += 1
-
-            x_list.append(list(features))
+            x_list.append(features)
             y_list.append(eval(label))
 
     return x_list, y_list
