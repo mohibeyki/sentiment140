@@ -48,13 +48,16 @@ model.fit(
     x_train,
     y_train,
     batch_size=batch_size,
-    epochs=15
+    epochs=15,
+    verbose=True,
+    callbacks=[checkpoint],
 )
 
 score, acc = model.evaluate(
     x_test,
     y_test,
-    batch_size=batch_size
+    batch_size=batch_size,
+    verbose=True
 )
 
 print('Test score:', score)
