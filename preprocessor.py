@@ -2,7 +2,6 @@ import pickle
 import traceback
 from collections import Counter
 
-import pandas as pd
 import numpy as np
 import progressbar
 from nltk.stem import WordNetLemmatizer
@@ -69,7 +68,7 @@ def create_lexicon(fin):
 
     word_counts = Counter(words_list).most_common()
     for w in word_counts:
-        lexicon.append(w[0])
+        lexicon.append(w)
 
     print(len(lexicon))
 
@@ -77,7 +76,7 @@ def create_lexicon(fin):
         pickle.dump(lexicon, f)
 
 
-# create_lexicon('train_set.csv')
+create_lexicon('train_set.csv')
 
 
 def create_lexicon_dict(lexicon_pickle):
@@ -168,5 +167,4 @@ def minify_sample(fin, fout):
                 break
     output_file.close()
 
-
-minify_sample('train_set_shuffled.csv', 'sample_set.csv')
+# minify_sample('train_set_shuffled.csv', 'sample_set.csv')

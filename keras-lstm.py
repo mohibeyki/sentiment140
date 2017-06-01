@@ -1,13 +1,13 @@
 import keras
 from keras.preprocessing import sequence
 
-from sentiment140 import parse_data
+from sentiment140 import parse_data, generator
 
-# total_samples = 1600000
+total_samples = 1600000
 max_features = 40000  # 4403  # 11135
 max_len = 80  # cut texts after this number of words (among top max_features most common words)
 batch_size = 128
-# total_batches_per_epoch = total_samples // batch_size
+total_batches_per_epoch = total_samples // batch_size
 
 print('Loading train data')
 x_train, y_train = parse_data(max_features, 'train_set_shuffled.csv')
@@ -34,24 +34,24 @@ model.compile(
 
 checkpoint = keras.callbacks.ModelCheckpoint('weights.{epoch:02d}.hdf5', monitor='val_loss', verbose=1)
 
-# model.fit_generator(
-#     generator=generator('sample_set.csv', batch_size),
-#     steps_per_epoch=total_batches_per_epoch,
-#     epochs=10,
-#     verbose=False,
-#     callbacks=[checkpoint],
-#     validation_data=generator('test_set.csv', batch_size),
-#     validation_steps=498 // batch_size
-# )
-
-model.fit(
-    x_train,
-    y_train,
-    batch_size=batch_size,
-    epochs=15,
-    verbose=True,
+model.fit_generator(
+    generator=generator('sample_set.csv', batch_size),
+    steps_per_epoch=total_batches_per_epoch,
+    epochs=10,
+    verbose=False,
     callbacks=[checkpoint],
+    validation_data=generator('test_set.csv', batch_size),
+    validation_steps=498 // batch_size
 )
+
+# model.fit(
+#     x_train,
+#     y_train,
+#     batch_size=batch_size,
+#     epochs=15,
+#     verbose=True,
+#     callbacks=[checkpoint],
+# )
 
 score, acc = model.evaluate(
     x_test,

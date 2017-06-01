@@ -6,7 +6,7 @@ from nltk.tokenize import word_tokenize
 lemmatizer = WordNetLemmatizer()
 
 
-def generator(feature_count, source='sample_set.csv', batch_size=128):
+def generator(feature_count, source='train_set.csv', batch_size=128):
     with open('lexicon-dict.pickle', 'rb') as f:
         lexicon = pickle.load(f)
     while True:
